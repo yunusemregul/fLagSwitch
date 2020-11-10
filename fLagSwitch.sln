@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30621.155
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "fLagSwitch", "fLagSwitch.csproj", "{9405D703-7313-4ADA-8E72-8E3FA404C63D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9405D703-7313-4ADA-8E72-8E3FA404C63D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9405D703-7313-4ADA-8E72-8E3FA404C63D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9405D703-7313-4ADA-8E72-8E3FA404C63D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9405D703-7313-4ADA-8E72-8E3FA404C63D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D7F923E1-99DE-49D1-9A1A-8B9D050AE128}
+	EndGlobalSection
+EndGlobal
