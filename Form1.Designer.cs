@@ -101,7 +101,7 @@ namespace fSwitch
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(157, 13);
             this.statusLabel.TabIndex = 6;
-            this.statusLabel.Text = "Waiting for settings to be filled...";
+
             // 
             // fLagSwitch
             // 
@@ -117,6 +117,7 @@ namespace fSwitch
             this.Controls.Add(this.button1);
             this.Name = "fLagSwitch";
             this.Text = "fLagSwitch";
+            this.Load += new System.EventHandler(this.fLagSwitch_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
