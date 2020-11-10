@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using System.Security.Principal;
+using System.Threading.Tasks;
 
 namespace fSwitch
 {
@@ -19,6 +20,8 @@ namespace fSwitch
 
         private bool fileSpecified = false;
         private bool keySpecified = false;
+        private bool ready = false;
+
         private bool isLagging = false;
         
         private Timer keyPressTimer;
@@ -52,8 +55,9 @@ namespace fSwitch
 
         private void fLagSwitch_Load(object sender, EventArgs e)
         {
-            this.keyPressTimer.Start();
-            statusTextUpdater();
+            keyPressTimer.Start();
+            statusUpdater();
+            Text = randomString(random.Next(10,20));
         }
 
         public static string randomString(int length)
@@ -75,13 +79,14 @@ namespace fSwitch
                 filePath = fileDialog.FileName;
                 textBox1.Text = fileDialog.FileName;
                 fileSpecified = true;
-                statusTextUpdater();
+                statusUpdater();
             }
             else
             {
                 filePath = "";
                 fileSpecified = false;
-                statusTextUpdater();
+                ready = false;
+                statusUpdater();
             }
         }
 
@@ -92,13 +97,14 @@ namespace fSwitch
 
         private void OnTogglerShortcutSpecified(object sender, KeyEventArgs e)
         {
+            ready = false;
             textBox2.Text = e.KeyCode.ToString();
             key = e.KeyValue;
             keySpecified = true;
-            statusTextUpdater();
+            statusUpdater();
         }
 
-        private void statusTextUpdater()
+        private async void statusUpdater()
         {
             if (!IsAdministrator())
             {
@@ -108,6 +114,7 @@ namespace fSwitch
                 textBox2.Enabled = false;
                 label1.Enabled = false;
                 label2.Enabled = false;
+                ready = false;
                 return;
             }
 
@@ -115,11 +122,14 @@ namespace fSwitch
             {
                 statusLabel.ForeColor = Color.Green;
                 statusLabel.Text = "Everything is good! Waiting for lag key press...";
+                await Task.Delay(1000);
+                ready = true;
             }
             else
             {
                 statusLabel.ForeColor = Color.Red;
                 statusLabel.Text = "Waiting for settings to be filled...";
+                ready = false;
             }
         }
 
@@ -128,7 +138,7 @@ namespace fSwitch
 
         private async void keypressTimer_Tick(object sender, EventArgs e)
         {
-            if (keySpecified && fileSpecified)
+            if (keySpecified && fileSpecified && ready)
             {
                 short keyState = GetAsyncKeyState(key);
                 bool isKeyPressed = ((int)keyState >> 15 & 1) == 1;
@@ -151,7 +161,7 @@ namespace fSwitch
                         Process.Start(blockIn);
                         Process.Start(blockOut);
 
-                        statusLabel.ForeColor = Color.Yellow;
+                        statusLabel.ForeColor = Color.Blue;
                         statusLabel.Text = "Lagging!";
                         isLagging = true;
 
