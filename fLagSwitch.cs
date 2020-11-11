@@ -6,7 +6,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace fSwitch
+namespace fLagSwitch
 {
     public partial class fLagSwitch : Form
     {

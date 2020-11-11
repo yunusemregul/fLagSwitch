@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace fSwitch
+namespace fLagSwitch
 {
     partial class fLagSwitch
     {
@@ -30,6 +30,7 @@ namespace fSwitch
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(fLagSwitch));
             this.button1 = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -132,7 +133,7 @@ namespace fSwitch
             this.enableSoundNotifications.Checked = true;
             this.enableSoundNotifications.CheckState = System.Windows.Forms.CheckState.Checked;
             this.enableSoundNotifications.Dock = System.Windows.Forms.DockStyle.Top;
-            this.enableSoundNotifications.Location = new System.Drawing.Point(3, 141);
+            this.enableSoundNotifications.Location = new System.Drawing.Point(3, 144);
             this.enableSoundNotifications.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
             this.enableSoundNotifications.Name = "enableSoundNotifications";
             this.enableSoundNotifications.Size = new System.Drawing.Size(297, 17);
@@ -142,7 +143,6 @@ namespace fSwitch
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.flowLayoutPanel1.AutoSize = true;
             this.flowLayoutPanel1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flowLayoutPanel1.Controls.Add(this.label1);
@@ -152,11 +152,12 @@ namespace fSwitch
             this.flowLayoutPanel1.Controls.Add(this.flowLayoutPanel5);
             this.flowLayoutPanel1.Controls.Add(this.enableSoundNotifications);
             this.flowLayoutPanel1.Controls.Add(this.flowLayoutPanel3);
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(12, 12);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(8);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(303, 180);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(307, 185);
             this.flowLayoutPanel1.TabIndex = 8;
             // 
             // flowLayoutPanel2
@@ -180,8 +181,8 @@ namespace fSwitch
             this.flowLayoutPanel4.Controls.Add(this.laggerEnabled);
             this.flowLayoutPanel4.Controls.Add(this.lagTogglerKeyEntry);
             this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.flowLayoutPanel4.Location = new System.Drawing.Point(0, 64);
-            this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(0, 6, 0, 0);
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(0, 61);
+            this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.flowLayoutPanel4.Name = "flowLayoutPanel4";
             this.flowLayoutPanel4.Size = new System.Drawing.Size(303, 25);
             this.flowLayoutPanel4.TabIndex = 9;
@@ -209,8 +210,8 @@ namespace fSwitch
             this.flowLayoutPanel5.Controls.Add(this.lagInSecondsLayoutBox);
             this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Top;
             this.flowLayoutPanel5.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel5.Location = new System.Drawing.Point(0, 89);
-            this.flowLayoutPanel5.Margin = new System.Windows.Forms.Padding(0);
+            this.flowLayoutPanel5.Location = new System.Drawing.Point(0, 92);
+            this.flowLayoutPanel5.Margin = new System.Windows.Forms.Padding(0, 6, 0, 0);
             this.flowLayoutPanel5.Name = "flowLayoutPanel5";
             this.flowLayoutPanel5.Size = new System.Drawing.Size(303, 46);
             this.flowLayoutPanel5.TabIndex = 9;
@@ -267,7 +268,7 @@ namespace fSwitch
             this.flowLayoutPanel3.Controls.Add(this.label3);
             this.flowLayoutPanel3.Controls.Add(this.statusLabel);
             this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(0, 167);
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(0, 170);
             this.flowLayoutPanel3.Margin = new System.Windows.Forms.Padding(0, 6, 0, 0);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
             this.flowLayoutPanel3.Size = new System.Drawing.Size(303, 13);
@@ -277,9 +278,11 @@ namespace fSwitch
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(330, 251);
+            this.ClientSize = new System.Drawing.Size(331, 209);
             this.Controls.Add(this.flowLayoutPanel1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "fLagSwitch";
+            this.Padding = new System.Windows.Forms.Padding(12);
             this.Text = "fLagSwitch";
             this.Load += new System.EventHandler(this.fLagSwitch_Load);
             this.flowLayoutPanel1.ResumeLayout(false);
