@@ -40,13 +40,20 @@ namespace fSwitch
             this.enableSoundNotifications = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
-            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
-            this.laggerEnabled = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
+            this.laggerEnabled = new System.Windows.Forms.CheckBox();
+            this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
+            this.toggleLag = new System.Windows.Forms.CheckBox();
+            this.lagInSecondsLayoutBox = new System.Windows.Forms.FlowLayoutPanel();
+            this.label4 = new System.Windows.Forms.Label();
+            this.lagInSecondsTextbox = new System.Windows.Forms.TextBox();
+            this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
-            this.flowLayoutPanel3.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
+            this.flowLayoutPanel5.SuspendLayout();
+            this.lagInSecondsLayoutBox.SuspendLayout();
+            this.flowLayoutPanel3.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -125,7 +132,7 @@ namespace fSwitch
             this.enableSoundNotifications.Checked = true;
             this.enableSoundNotifications.CheckState = System.Windows.Forms.CheckState.Checked;
             this.enableSoundNotifications.Dock = System.Windows.Forms.DockStyle.Top;
-            this.enableSoundNotifications.Location = new System.Drawing.Point(3, 95);
+            this.enableSoundNotifications.Location = new System.Drawing.Point(3, 141);
             this.enableSoundNotifications.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
             this.enableSoundNotifications.Name = "enableSoundNotifications";
             this.enableSoundNotifications.Size = new System.Drawing.Size(297, 17);
@@ -142,13 +149,14 @@ namespace fSwitch
             this.flowLayoutPanel1.Controls.Add(this.flowLayoutPanel2);
             this.flowLayoutPanel1.Controls.Add(this.label2);
             this.flowLayoutPanel1.Controls.Add(this.flowLayoutPanel4);
+            this.flowLayoutPanel1.Controls.Add(this.flowLayoutPanel5);
             this.flowLayoutPanel1.Controls.Add(this.enableSoundNotifications);
             this.flowLayoutPanel1.Controls.Add(this.flowLayoutPanel3);
             this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(12, 12);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(8);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(303, 134);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(303, 180);
             this.flowLayoutPanel1.TabIndex = 8;
             // 
             // flowLayoutPanel2
@@ -165,18 +173,18 @@ namespace fSwitch
             this.flowLayoutPanel2.Size = new System.Drawing.Size(303, 26);
             this.flowLayoutPanel2.TabIndex = 3;
             // 
-            // flowLayoutPanel3
+            // flowLayoutPanel4
             // 
-            this.flowLayoutPanel3.AutoSize = true;
-            this.flowLayoutPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel3.Controls.Add(this.label3);
-            this.flowLayoutPanel3.Controls.Add(this.statusLabel);
-            this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(0, 121);
-            this.flowLayoutPanel3.Margin = new System.Windows.Forms.Padding(0, 6, 0, 0);
-            this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(303, 13);
-            this.flowLayoutPanel3.TabIndex = 9;
+            this.flowLayoutPanel4.AutoSize = true;
+            this.flowLayoutPanel4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanel4.Controls.Add(this.laggerEnabled);
+            this.flowLayoutPanel4.Controls.Add(this.lagTogglerKeyEntry);
+            this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.flowLayoutPanel4.Location = new System.Drawing.Point(0, 64);
+            this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(0, 6, 0, 0);
+            this.flowLayoutPanel4.Name = "flowLayoutPanel4";
+            this.flowLayoutPanel4.Size = new System.Drawing.Size(303, 25);
+            this.flowLayoutPanel4.TabIndex = 9;
             // 
             // laggerEnabled
             // 
@@ -193,18 +201,77 @@ namespace fSwitch
             this.laggerEnabled.UseVisualStyleBackColor = true;
             this.laggerEnabled.CheckedChanged += new System.EventHandler(this.laggerEnabled_CheckedChanged);
             // 
-            // flowLayoutPanel4
+            // flowLayoutPanel5
             // 
-            this.flowLayoutPanel4.AutoSize = true;
-            this.flowLayoutPanel4.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel4.Controls.Add(this.laggerEnabled);
-            this.flowLayoutPanel4.Controls.Add(this.lagTogglerKeyEntry);
-            this.flowLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.flowLayoutPanel4.Location = new System.Drawing.Point(0, 64);
-            this.flowLayoutPanel4.Margin = new System.Windows.Forms.Padding(0, 6, 0, 0);
-            this.flowLayoutPanel4.Name = "flowLayoutPanel4";
-            this.flowLayoutPanel4.Size = new System.Drawing.Size(303, 25);
-            this.flowLayoutPanel4.TabIndex = 9;
+            this.flowLayoutPanel5.AutoSize = true;
+            this.flowLayoutPanel5.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanel5.Controls.Add(this.toggleLag);
+            this.flowLayoutPanel5.Controls.Add(this.lagInSecondsLayoutBox);
+            this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Top;
+            this.flowLayoutPanel5.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
+            this.flowLayoutPanel5.Location = new System.Drawing.Point(0, 89);
+            this.flowLayoutPanel5.Margin = new System.Windows.Forms.Padding(0);
+            this.flowLayoutPanel5.Name = "flowLayoutPanel5";
+            this.flowLayoutPanel5.Size = new System.Drawing.Size(303, 46);
+            this.flowLayoutPanel5.TabIndex = 9;
+            // 
+            // toggleLag
+            // 
+            this.toggleLag.AutoSize = true;
+            this.toggleLag.Checked = true;
+            this.toggleLag.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.toggleLag.Location = new System.Drawing.Point(3, 3);
+            this.toggleLag.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
+            this.toggleLag.Name = "toggleLag";
+            this.toggleLag.Size = new System.Drawing.Size(76, 17);
+            this.toggleLag.TabIndex = 0;
+            this.toggleLag.Text = "Toggle lag";
+            this.toggleLag.UseVisualStyleBackColor = true;
+            this.toggleLag.CheckedChanged += new System.EventHandler(this.toggleLag_CheckedChanged);
+            // 
+            // lagInSecondsLayoutBox
+            // 
+            this.lagInSecondsLayoutBox.AutoSize = true;
+            this.lagInSecondsLayoutBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.lagInSecondsLayoutBox.Controls.Add(this.label4);
+            this.lagInSecondsLayoutBox.Controls.Add(this.lagInSecondsTextbox);
+            this.lagInSecondsLayoutBox.Enabled = false;
+            this.lagInSecondsLayoutBox.Location = new System.Drawing.Point(0, 20);
+            this.lagInSecondsLayoutBox.Margin = new System.Windows.Forms.Padding(0);
+            this.lagInSecondsLayoutBox.Name = "lagInSecondsLayoutBox";
+            this.lagInSecondsLayoutBox.Size = new System.Drawing.Size(297, 26);
+            this.lagInSecondsLayoutBox.TabIndex = 1;
+            // 
+            // label4
+            // 
+            this.label4.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(3, 6);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(82, 13);
+            this.label4.TabIndex = 0;
+            this.label4.Text = "Lag in seconds:";
+            // 
+            // lagInSecondsTextbox
+            // 
+            this.lagInSecondsTextbox.Location = new System.Drawing.Point(91, 3);
+            this.lagInSecondsTextbox.Name = "lagInSecondsTextbox";
+            this.lagInSecondsTextbox.Size = new System.Drawing.Size(203, 20);
+            this.lagInSecondsTextbox.TabIndex = 1;
+            this.lagInSecondsTextbox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.lagInSecondsTextbox_KeyPress);
+            // 
+            // flowLayoutPanel3
+            // 
+            this.flowLayoutPanel3.AutoSize = true;
+            this.flowLayoutPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.flowLayoutPanel3.Controls.Add(this.label3);
+            this.flowLayoutPanel3.Controls.Add(this.statusLabel);
+            this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Top;
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(0, 167);
+            this.flowLayoutPanel3.Margin = new System.Windows.Forms.Padding(0, 6, 0, 0);
+            this.flowLayoutPanel3.Name = "flowLayoutPanel3";
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(303, 13);
+            this.flowLayoutPanel3.TabIndex = 9;
             // 
             // fLagSwitch
             // 
@@ -219,10 +286,14 @@ namespace fSwitch
             this.flowLayoutPanel1.PerformLayout();
             this.flowLayoutPanel2.ResumeLayout(false);
             this.flowLayoutPanel2.PerformLayout();
-            this.flowLayoutPanel3.ResumeLayout(false);
-            this.flowLayoutPanel3.PerformLayout();
             this.flowLayoutPanel4.ResumeLayout(false);
             this.flowLayoutPanel4.PerformLayout();
+            this.flowLayoutPanel5.ResumeLayout(false);
+            this.flowLayoutPanel5.PerformLayout();
+            this.lagInSecondsLayoutBox.ResumeLayout(false);
+            this.lagInSecondsLayoutBox.PerformLayout();
+            this.flowLayoutPanel3.ResumeLayout(false);
+            this.flowLayoutPanel3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -243,6 +314,11 @@ namespace fSwitch
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel3;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel4;
         private System.Windows.Forms.CheckBox laggerEnabled;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel5;
+        private System.Windows.Forms.CheckBox toggleLag;
+        private System.Windows.Forms.FlowLayoutPanel lagInSecondsLayoutBox;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox lagInSecondsTextbox;
     }
 }
 

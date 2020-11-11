@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace fSwitch
 {
@@ -23,9 +23,9 @@ namespace fSwitch
         private bool ready = false;
 
         private bool isLagging = false;
-        
+
         private Timer keyPressTimer;
-        
+
         private string randomRuleName;
 
         public fLagSwitch()
@@ -57,7 +57,7 @@ namespace fSwitch
         {
             keyPressTimer.Start();
             statusUpdater();
-            Text = randomString(random.Next(10,20));
+            Text = randomString(random.Next(10, 20));
         }
 
         public static string randomString(int length)
@@ -117,6 +117,7 @@ namespace fSwitch
                 enableSoundNotifications.Enabled = false;
                 laggerEnabled.Enabled = false;
                 ready = false;
+                toggleLag.Enabled = false;
                 return;
             }
 
@@ -126,6 +127,7 @@ namespace fSwitch
                 statusLabel.Text = "You have to enable the lagger.";
                 return;
             }
+
 
             if (keySpecified && fileSpecified && IsAdministrator())
             {
@@ -145,6 +147,54 @@ namespace fSwitch
         [DllImport("User32.dll")]
         private static extern short GetAsyncKeyState(int vKey);
 
+        private void startLag()
+        {
+            if (enableSoundNotifications.Checked)
+                Console.Beep(420, 250);
+
+            ProcessStartInfo blockIn = new ProcessStartInfo("cmd.exe");
+            ProcessStartInfo blockOut = new ProcessStartInfo("cmd.exe");
+            blockIn.WindowStyle = ProcessWindowStyle.Hidden;
+            blockOut.WindowStyle = ProcessWindowStyle.Hidden;
+
+            randomRuleName = randomString(10);
+
+            blockIn.Arguments = "/C netsh advfirewall firewall add rule name=\"" + randomRuleName + "\" dir=in action=block program=\"" + filePath + "\" enable=yes";
+            blockOut.Arguments = "/C netsh advfirewall firewall add rule name=\"" + randomRuleName + "\" dir=out action=block program=\"" + filePath + "\" enable=yes";
+
+            Process.Start(blockIn);
+            Process.Start(blockOut);
+
+            statusLabel.ForeColor = Color.Blue;
+            statusLabel.Text = "Lagging!";
+            isLagging = true;
+
+            button1.Enabled = false;
+            lagTogglerKeyEntry.Enabled = false;
+            laggerEnabled.Enabled = false;
+
+        }
+
+        private void endLag()
+        {
+            if (enableSoundNotifications.Checked)
+                Console.Beep(1250, 250);
+
+            ProcessStartInfo ruleDeleter = new ProcessStartInfo("cmd.exe");
+            ruleDeleter.WindowStyle = ProcessWindowStyle.Hidden;
+            ruleDeleter.Arguments = "/C netsh advfirewall firewall delete rule name=\"" + randomRuleName + "\" program=\"" + filePath + "\"";
+
+            Process.Start(ruleDeleter);
+
+            lagTogglerKeyEntry.Enabled = true;
+            laggerEnabled.Enabled = true;
+            button1.Enabled = true;
+            statusLabel.ForeColor = Color.Green;
+            statusLabel.Text = "Ready!";
+
+            isLagging = false;
+        }
+
         private async void keypressTimer_Tick(object sender, EventArgs e)
         {
             if (keySpecified && fileSpecified && ready && laggerEnabled.Checked)
@@ -156,42 +206,18 @@ namespace fSwitch
                 {
                     if (!isLagging)
                     {
-                        if(enableSoundNotifications.Checked)
-                            Console.Beep(420, 250);
+                        startLag();
 
-                        ProcessStartInfo blockIn = new ProcessStartInfo("cmd.exe");
-                        ProcessStartInfo blockOut = new ProcessStartInfo("cmd.exe");
-                        blockIn.WindowStyle = ProcessWindowStyle.Hidden;
-                        blockOut.WindowStyle = ProcessWindowStyle.Hidden;
-
-                        randomRuleName = randomString(10);
-
-                        blockIn.Arguments = "/C netsh advfirewall firewall add rule name=\"" + randomRuleName + "\" dir=in action=block program=\"" + filePath + "\" enable=yes";
-                        blockOut.Arguments = "/C netsh advfirewall firewall add rule name=\"" + randomRuleName + "\" dir=out action=block program=\"" + filePath + "\" enable=yes";
-
-                        Process.Start(blockIn);
-                        Process.Start(blockOut);
-
-                        statusLabel.ForeColor = Color.Blue;
-                        statusLabel.Text = "Lagging!";
-                        isLagging = true;
-
-                        button1.Enabled = false;
+                        if (!toggleLag.Checked)
+                        {
+                            float lagSeconds = float.Parse(lagInSecondsTextbox.Text);
+                            await Task.Delay((int)(lagSeconds * 1000) + random.Next(-500, 500));
+                            endLag();
+                        }
                     }
-                    else
+                    else if (toggleLag.Checked)
                     {
-                        if(enableSoundNotifications.Checked)
-                            Console.Beep(1250, 250);
-
-                        ProcessStartInfo ruleDeleter = new ProcessStartInfo("cmd.exe");
-                        ruleDeleter.WindowStyle = ProcessWindowStyle.Hidden;
-                        ruleDeleter.Arguments = "/C netsh advfirewall firewall delete rule name=\""+ randomRuleName + "\" program=\"" + filePath + "\"";
-
-                        Process.Start(ruleDeleter);
-                        button1.Enabled = true;
-                        statusLabel.ForeColor = Color.Green;
-                        statusLabel.Text = "Ready!";
-                        isLagging = false;
+                        endLag();
                     }
                 }
             }
@@ -200,6 +226,25 @@ namespace fSwitch
         private void laggerEnabled_CheckedChanged(object sender, EventArgs e)
         {
             statusUpdater();
+        }
+
+        private void toggleLag_CheckedChanged(object sender, EventArgs e)
+        {
+            lagInSecondsLayoutBox.Enabled = !toggleLag.Checked;
+        }
+
+        private void lagInSecondsTextbox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != '.'))
+            {
+                e.Handled = true;
+            }
+
+            // only allow one decimal point
+            if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
+            {
+                e.Handled = true;
+            }
         }
     }
 }
