@@ -98,7 +98,7 @@ namespace fSwitch
         private void OnTogglerShortcutSpecified(object sender, KeyEventArgs e)
         {
             ready = false;
-            textBox2.Text = e.KeyCode.ToString();
+            lagTogglerKeyEntry.Text = e.KeyCode.ToString();
             key = e.KeyValue;
             keySpecified = true;
             statusUpdater();
@@ -111,10 +111,19 @@ namespace fSwitch
                 statusLabel.ForeColor = Color.Red;
                 statusLabel.Text = "You have to run this as Administrator.";
                 button1.Enabled = false;
-                textBox2.Enabled = false;
+                lagTogglerKeyEntry.Enabled = false;
                 label1.Enabled = false;
                 label2.Enabled = false;
+                enableSoundNotifications.Enabled = false;
+                laggerEnabled.Enabled = false;
                 ready = false;
+                return;
+            }
+
+            if (!laggerEnabled.Checked)
+            {
+                statusLabel.ForeColor = Color.Red;
+                statusLabel.Text = "You have to enable the lagger.";
                 return;
             }
 
@@ -138,7 +147,7 @@ namespace fSwitch
 
         private async void keypressTimer_Tick(object sender, EventArgs e)
         {
-            if (keySpecified && fileSpecified && ready)
+            if (keySpecified && fileSpecified && ready && laggerEnabled.Checked)
             {
                 short keyState = GetAsyncKeyState(key);
                 bool isKeyPressed = ((int)keyState >> 15 & 1) == 1;
@@ -147,7 +156,9 @@ namespace fSwitch
                 {
                     if (!isLagging)
                     {
-                        Console.Beep(420, 250);
+                        if(enableSoundNotifications.Checked)
+                            Console.Beep(420, 250);
+
                         ProcessStartInfo blockIn = new ProcessStartInfo("cmd.exe");
                         ProcessStartInfo blockOut = new ProcessStartInfo("cmd.exe");
                         blockIn.WindowStyle = ProcessWindowStyle.Hidden;
@@ -169,7 +180,9 @@ namespace fSwitch
                     }
                     else
                     {
-                        Console.Beep(1250, 250);
+                        if(enableSoundNotifications.Checked)
+                            Console.Beep(1250, 250);
+
                         ProcessStartInfo ruleDeleter = new ProcessStartInfo("cmd.exe");
                         ruleDeleter.WindowStyle = ProcessWindowStyle.Hidden;
                         ruleDeleter.Arguments = "/C netsh advfirewall firewall delete rule name=\""+ randomRuleName + "\" program=\"" + filePath + "\"";
@@ -182,6 +195,11 @@ namespace fSwitch
                     }
                 }
             }
+        }
+
+        private void laggerEnabled_CheckedChanged(object sender, EventArgs e)
+        {
+            statusUpdater();
         }
     }
 }
