@@ -43,13 +43,13 @@ namespace fLagSwitch
             this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
             this.flowLayoutPanel4 = new System.Windows.Forms.FlowLayoutPanel();
             this.laggerEnabled = new System.Windows.Forms.CheckBox();
+            this.button_change = new System.Windows.Forms.Button();
             this.flowLayoutPanel5 = new System.Windows.Forms.FlowLayoutPanel();
             this.toggleLag = new System.Windows.Forms.CheckBox();
             this.lagInSecondsLayoutBox = new System.Windows.Forms.FlowLayoutPanel();
             this.label4 = new System.Windows.Forms.Label();
             this.lagInSecondsTextbox = new System.Windows.Forms.TextBox();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
-            this.button_change = new System.Windows.Forms.Button();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
@@ -107,6 +107,7 @@ namespace fLagSwitch
             this.lagTogglerKeyEntry.TabIndex = 4;
             this.lagTogglerKeyEntry.KeyDown += new System.Windows.Forms.KeyEventHandler(this.OnTogglerShortcutSpecified);
             this.lagTogglerKeyEntry.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.OnTogglerShortcutKeyPress);
+            this.lagTogglerKeyEntry.MouseDown += new System.Windows.Forms.MouseEventHandler(this.lagTogglerKeyEntry_MouseDown);
             // 
             // label3
             // 
@@ -204,6 +205,16 @@ namespace fLagSwitch
             this.laggerEnabled.UseVisualStyleBackColor = true;
             this.laggerEnabled.CheckedChanged += new System.EventHandler(this.laggerEnabled_CheckedChanged);
             // 
+            // button_change
+            // 
+            this.button_change.Location = new System.Drawing.Point(235, 3);
+            this.button_change.Name = "button_change";
+            this.button_change.Size = new System.Drawing.Size(65, 20);
+            this.button_change.TabIndex = 10;
+            this.button_change.Text = "CHANGE";
+            this.button_change.UseVisualStyleBackColor = true;
+            this.button_change.Click += new System.EventHandler(this.button_change_Click);
+            // 
             // flowLayoutPanel5
             // 
             this.flowLayoutPanel5.AutoSize = true;
@@ -275,16 +286,6 @@ namespace fLagSwitch
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
             this.flowLayoutPanel3.Size = new System.Drawing.Size(303, 13);
             this.flowLayoutPanel3.TabIndex = 9;
-            // 
-            // button_change
-            // 
-            this.button_change.Location = new System.Drawing.Point(235, 3);
-            this.button_change.Name = "button_change";
-            this.button_change.Size = new System.Drawing.Size(65, 20);
-            this.button_change.TabIndex = 10;
-            this.button_change.Text = "CHANGE";
-            this.button_change.UseVisualStyleBackColor = true;
-            this.button_change.Click += new System.EventHandler(this.button_change_Click);
             // 
             // fLagSwitch
             // 

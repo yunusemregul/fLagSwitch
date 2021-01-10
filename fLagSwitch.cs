@@ -12,6 +12,8 @@ namespace fLagSwitch
     {
         private const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         private static Random random = new Random();
+        private static bool isDebugging = false;
+
 
         private OpenFileDialog fileDialog;
 
@@ -44,13 +46,16 @@ namespace fLagSwitch
             fileDialog.Multiselect = false;
 
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
+
+#if DEBUG
+            isDebugging = true;
+#endif
         }
 
         public static bool IsAdministrator()
         {
-            #if DEBUG
+            if (isDebugging)
                 return true;
-            #endif
 
             var identity = WindowsIdentity.GetCurrent();
             var principal = new WindowsPrincipal(identity);
@@ -61,11 +66,11 @@ namespace fLagSwitch
         {
             keyPressTimer.Start();
             statusUpdater();
-            #if DEBUG
+
+            if (isDebugging)
                 Text = "DEBUG MODE";
-            #else
+            else
                 Text = randomString(random.Next(10, 20));
-            #endif
         }
 
         public static string randomString(int length)
@@ -113,6 +118,35 @@ namespace fLagSwitch
             statusUpdater();
         }
 
+        private void lagTogglerKeyEntry_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left || e.Button == MouseButtons.Right)
+                return;
+
+            if (e.Button == MouseButtons.Middle)
+            {
+                lagTogglerKeyEntry.Text = "Middle";
+                key = 0x04; // VK_MBUTTON
+            }
+
+            if (e.Button == MouseButtons.XButton1)
+            {
+                lagTogglerKeyEntry.Text = "Mouse4";
+                key = 0x05; // VK_XBUTTON1
+            }
+
+            if (e.Button == MouseButtons.XButton2)
+            {
+                lagTogglerKeyEntry.Text = "Mouse5";
+                key = 0x06; // VK_XBUTTON2
+            }
+
+            ready = false;
+            keySpecified = true;
+            lagTogglerKeyEntry.Enabled = false;
+            statusUpdater();
+        }
+
         private async void statusUpdater()
         {
             if (!IsAdministrator())
@@ -127,6 +161,7 @@ namespace fLagSwitch
                 laggerEnabled.Enabled = false;
                 ready = false;
                 toggleLag.Enabled = false;
+                button_change.Enabled = false;
                 return;
             }
 
@@ -138,21 +173,19 @@ namespace fLagSwitch
             }
 
 
-            if (keySpecified && fileSpecified && IsAdministrator())
+            if (keySpecified && (isDebugging || fileSpecified) && IsAdministrator())
             {
-                statusLabel.ForeColor = Color.Green;
-                statusLabel.Text = "Everything is good! Waiting for lag key press...";
-                await Task.Delay(1000);
-                ready = true;
+                {
+                    statusLabel.ForeColor = Color.Green;
+                    statusLabel.Text = "Everything is good! Waiting for lag key press...";
+                    await Task.Delay(1000);
+                    ready = true;
+                }
             }
             else
             {
                 statusLabel.ForeColor = Color.Red;
-#if DEBUG
-                statusLabel.Text = "DEBUG MODE";
-#else
                 statusLabel.Text = "Waiting for settings to be filled...";
-#endif
                 ready = false;
             }
         }
@@ -162,12 +195,19 @@ namespace fLagSwitch
 
         private void startLag()
         {
-#if DEBUG
-                return;
-#endif
-
             if (enableSoundNotifications.Checked)
                 Console.Beep(420, 250);
+
+            statusLabel.ForeColor = Color.Blue;
+            statusLabel.Text = "Lagging!";
+            isLagging = true;
+
+            button1.Enabled = false;
+            lagTogglerKeyEntry.Enabled = false;
+            laggerEnabled.Enabled = false;
+
+            if (isDebugging)
+                return;
 
             ProcessStartInfo blockIn = new ProcessStartInfo("cmd.exe");
             ProcessStartInfo blockOut = new ProcessStartInfo("cmd.exe");
@@ -181,63 +221,56 @@ namespace fLagSwitch
 
             Process.Start(blockIn);
             Process.Start(blockOut);
-
-            statusLabel.ForeColor = Color.Blue;
-            statusLabel.Text = "Lagging!";
-            isLagging = true;
-
-            button1.Enabled = false;
-            lagTogglerKeyEntry.Enabled = false;
-            laggerEnabled.Enabled = false;
-
         }
 
         private void endLag()
         {
-#if DEBUG
-                return;
-#endif
-
             if (enableSoundNotifications.Checked)
                 Console.Beep(1250, 250);
-
-            ProcessStartInfo ruleDeleter = new ProcessStartInfo("cmd.exe");
-            ruleDeleter.WindowStyle = ProcessWindowStyle.Hidden;
-            ruleDeleter.Arguments = "/C netsh advfirewall firewall delete rule name=\"" + randomRuleName + "\" program=\"" + filePath + "\"";
-
-            Process.Start(ruleDeleter);
-
+            
             laggerEnabled.Enabled = true;
             button1.Enabled = true;
             statusLabel.ForeColor = Color.Green;
             statusLabel.Text = "Ready!";
 
             isLagging = false;
+
+            if (isDebugging)
+                return;
+
+            ProcessStartInfo ruleDeleter = new ProcessStartInfo("cmd.exe");
+            ruleDeleter.WindowStyle = ProcessWindowStyle.Hidden;
+            ruleDeleter.Arguments = "/C netsh advfirewall firewall delete rule name=\"" + randomRuleName + "\" program=\"" + filePath + "\"";
+
+            Process.Start(ruleDeleter);
         }
 
         private async void keypressTimer_Tick(object sender, EventArgs e)
         {
-            if (keySpecified && fileSpecified && ready && laggerEnabled.Checked)
+            if (isDebugging || (keySpecified && fileSpecified && laggerEnabled.Checked))
             {
-                short keyState = GetAsyncKeyState(key);
-                bool isKeyPressed = ((int)keyState >> 15 & 1) == 1;
-
-                if (isKeyPressed)
+                if (ready)
                 {
-                    if (!isLagging)
-                    {
-                        startLag();
+                    short keyState = GetAsyncKeyState(key);
+                    bool isKeyPressed = ((int)keyState >> 15 & 1) == 1;
 
-                        if (!toggleLag.Checked)
+                    if (isKeyPressed)
+                    {
+                        if (!isLagging)
                         {
-                            float lagSeconds = float.Parse(lagInSecondsTextbox.Text);
-                            await Task.Delay((int)(lagSeconds * 1000) + random.Next(-500, 500));
+                            startLag();
+
+                            if (!toggleLag.Checked)
+                            {
+                                float lagSeconds = float.Parse(lagInSecondsTextbox.Text);
+                                await Task.Delay((int)(lagSeconds * 1000) + random.Next(-500, 500));
+                                endLag();
+                            }
+                        }
+                        else if (toggleLag.Checked)
+                        {
                             endLag();
                         }
-                    }
-                    else if (toggleLag.Checked)
-                    {
-                        endLag();
                     }
                 }
             }
