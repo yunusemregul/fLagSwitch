@@ -48,6 +48,10 @@ namespace fLagSwitch
 
         public static bool IsAdministrator()
         {
+            #if DEBUG
+                return true;
+            #endif
+
             var identity = WindowsIdentity.GetCurrent();
             var principal = new WindowsPrincipal(identity);
             return principal.IsInRole(WindowsBuiltInRole.Administrator);
@@ -57,7 +61,11 @@ namespace fLagSwitch
         {
             keyPressTimer.Start();
             statusUpdater();
-            Text = randomString(random.Next(10, 20));
+            #if DEBUG
+                Text = "DEBUG MODE";
+            #else
+                Text = randomString(random.Next(10, 20));
+            #endif
         }
 
         public static string randomString(int length)
@@ -101,6 +109,7 @@ namespace fLagSwitch
             lagTogglerKeyEntry.Text = e.KeyCode.ToString();
             key = e.KeyValue;
             keySpecified = true;
+            lagTogglerKeyEntry.Enabled = false;
             statusUpdater();
         }
 
@@ -139,7 +148,11 @@ namespace fLagSwitch
             else
             {
                 statusLabel.ForeColor = Color.Red;
+#if DEBUG
+                statusLabel.Text = "DEBUG MODE";
+#else
                 statusLabel.Text = "Waiting for settings to be filled...";
+#endif
                 ready = false;
             }
         }
@@ -149,6 +162,10 @@ namespace fLagSwitch
 
         private void startLag()
         {
+#if DEBUG
+                return;
+#endif
+
             if (enableSoundNotifications.Checked)
                 Console.Beep(420, 250);
 
@@ -177,6 +194,10 @@ namespace fLagSwitch
 
         private void endLag()
         {
+#if DEBUG
+                return;
+#endif
+
             if (enableSoundNotifications.Checked)
                 Console.Beep(1250, 250);
 
@@ -186,7 +207,6 @@ namespace fLagSwitch
 
             Process.Start(ruleDeleter);
 
-            lagTogglerKeyEntry.Enabled = true;
             laggerEnabled.Enabled = true;
             button1.Enabled = true;
             statusLabel.ForeColor = Color.Green;
@@ -245,6 +265,12 @@ namespace fLagSwitch
             {
                 e.Handled = true;
             }
+        }
+
+        private void button_change_Click(object sender, EventArgs e)
+        {
+            lagTogglerKeyEntry.Enabled = true;
+            lagTogglerKeyEntry.Focus();
         }
     }
 }
