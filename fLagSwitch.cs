@@ -20,6 +20,7 @@ namespace fLagSwitch
         private String filePath;
         private int key;
 
+        private bool isKeyPressing = false;
         private bool fileSpecified = false;
         private bool keySpecified = false;
         private bool ready = false;
@@ -29,6 +30,9 @@ namespace fLagSwitch
         private Timer keyPressTimer;
 
         private string randomRuleName;
+
+        [DllImport("User32.dll")]
+        private static extern short GetAsyncKeyState(int vKey);
 
         public fLagSwitch()
         {
@@ -190,9 +194,6 @@ namespace fLagSwitch
             }
         }
 
-        [DllImport("User32.dll")]
-        private static extern short GetAsyncKeyState(int vKey);
-
         private void startLag()
         {
             if (enableSoundNotifications.Checked)
@@ -254,7 +255,7 @@ namespace fLagSwitch
                     short keyState = GetAsyncKeyState(key);
                     bool isKeyPressed = ((int)keyState >> 15 & 1) == 1;
 
-                    if (isKeyPressed)
+                    if (isKeyPressed && !isKeyPressing)
                     {
                         if (!isLagging)
                         {
@@ -271,6 +272,12 @@ namespace fLagSwitch
                         {
                             endLag();
                         }
+
+                        isKeyPressing = true;
+                    }
+                    else if (!isKeyPressed)
+                    {
+                        isKeyPressing = false;
                     }
                 }
             }
