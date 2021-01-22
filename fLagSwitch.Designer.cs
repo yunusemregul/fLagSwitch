@@ -50,12 +50,16 @@ namespace fLagSwitch
             this.label4 = new System.Windows.Forms.Label();
             this.lagInSecondsTextbox = new System.Windows.Forms.TextBox();
             this.flowLayoutPanel3 = new System.Windows.Forms.FlowLayoutPanel();
+            this.lagLimitLayoutBox = new System.Windows.Forms.FlowLayoutPanel();
+            this.label5 = new System.Windows.Forms.Label();
+            this.lagLimitEntry = new System.Windows.Forms.TextBox();
             this.flowLayoutPanel1.SuspendLayout();
             this.flowLayoutPanel2.SuspendLayout();
             this.flowLayoutPanel4.SuspendLayout();
             this.flowLayoutPanel5.SuspendLayout();
             this.lagInSecondsLayoutBox.SuspendLayout();
             this.flowLayoutPanel3.SuspendLayout();
+            this.lagLimitLayoutBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
@@ -135,7 +139,7 @@ namespace fLagSwitch
             this.enableSoundNotifications.Checked = true;
             this.enableSoundNotifications.CheckState = System.Windows.Forms.CheckState.Checked;
             this.enableSoundNotifications.Dock = System.Windows.Forms.DockStyle.Top;
-            this.enableSoundNotifications.Location = new System.Drawing.Point(3, 145);
+            this.enableSoundNotifications.Location = new System.Drawing.Point(3, 171);
             this.enableSoundNotifications.Margin = new System.Windows.Forms.Padding(3, 6, 3, 3);
             this.enableSoundNotifications.Name = "enableSoundNotifications";
             this.enableSoundNotifications.Size = new System.Drawing.Size(297, 17);
@@ -151,6 +155,7 @@ namespace fLagSwitch
             this.flowLayoutPanel1.Controls.Add(this.flowLayoutPanel2);
             this.flowLayoutPanel1.Controls.Add(this.label2);
             this.flowLayoutPanel1.Controls.Add(this.flowLayoutPanel4);
+            this.flowLayoutPanel1.Controls.Add(this.toggleLag);
             this.flowLayoutPanel1.Controls.Add(this.flowLayoutPanel5);
             this.flowLayoutPanel1.Controls.Add(this.enableSoundNotifications);
             this.flowLayoutPanel1.Controls.Add(this.flowLayoutPanel3);
@@ -159,7 +164,7 @@ namespace fLagSwitch
             this.flowLayoutPanel1.Location = new System.Drawing.Point(12, 12);
             this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(8);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(307, 185);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(307, 214);
             this.flowLayoutPanel1.TabIndex = 8;
             // 
             // flowLayoutPanel2
@@ -219,14 +224,14 @@ namespace fLagSwitch
             // 
             this.flowLayoutPanel5.AutoSize = true;
             this.flowLayoutPanel5.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.flowLayoutPanel5.Controls.Add(this.toggleLag);
+            this.flowLayoutPanel5.Controls.Add(this.lagLimitLayoutBox);
             this.flowLayoutPanel5.Controls.Add(this.lagInSecondsLayoutBox);
             this.flowLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Top;
             this.flowLayoutPanel5.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.flowLayoutPanel5.Location = new System.Drawing.Point(0, 93);
+            this.flowLayoutPanel5.Location = new System.Drawing.Point(0, 113);
             this.flowLayoutPanel5.Margin = new System.Windows.Forms.Padding(0, 6, 0, 0);
             this.flowLayoutPanel5.Name = "flowLayoutPanel5";
-            this.flowLayoutPanel5.Size = new System.Drawing.Size(303, 46);
+            this.flowLayoutPanel5.Size = new System.Drawing.Size(303, 52);
             this.flowLayoutPanel5.TabIndex = 9;
             // 
             // toggleLag
@@ -234,7 +239,7 @@ namespace fLagSwitch
             this.toggleLag.AutoSize = true;
             this.toggleLag.Checked = true;
             this.toggleLag.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.toggleLag.Location = new System.Drawing.Point(3, 3);
+            this.toggleLag.Location = new System.Drawing.Point(3, 90);
             this.toggleLag.Margin = new System.Windows.Forms.Padding(3, 3, 3, 0);
             this.toggleLag.Name = "toggleLag";
             this.toggleLag.Size = new System.Drawing.Size(76, 17);
@@ -250,10 +255,10 @@ namespace fLagSwitch
             this.lagInSecondsLayoutBox.Controls.Add(this.label4);
             this.lagInSecondsLayoutBox.Controls.Add(this.lagInSecondsTextbox);
             this.lagInSecondsLayoutBox.Enabled = false;
-            this.lagInSecondsLayoutBox.Location = new System.Drawing.Point(0, 20);
+            this.lagInSecondsLayoutBox.Location = new System.Drawing.Point(0, 26);
             this.lagInSecondsLayoutBox.Margin = new System.Windows.Forms.Padding(0);
             this.lagInSecondsLayoutBox.Name = "lagInSecondsLayoutBox";
-            this.lagInSecondsLayoutBox.Size = new System.Drawing.Size(297, 26);
+            this.lagInSecondsLayoutBox.Size = new System.Drawing.Size(303, 26);
             this.lagInSecondsLayoutBox.TabIndex = 1;
             // 
             // label4
@@ -270,8 +275,9 @@ namespace fLagSwitch
             // 
             this.lagInSecondsTextbox.Location = new System.Drawing.Point(91, 3);
             this.lagInSecondsTextbox.Name = "lagInSecondsTextbox";
-            this.lagInSecondsTextbox.Size = new System.Drawing.Size(203, 20);
+            this.lagInSecondsTextbox.Size = new System.Drawing.Size(209, 20);
             this.lagInSecondsTextbox.TabIndex = 1;
+            this.lagInSecondsTextbox.TextChanged += new System.EventHandler(this.lagInSecondsTextbox_TextChanged);
             this.lagInSecondsTextbox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.lagInSecondsTextbox_KeyPress);
             // 
             // flowLayoutPanel3
@@ -281,17 +287,48 @@ namespace fLagSwitch
             this.flowLayoutPanel3.Controls.Add(this.label3);
             this.flowLayoutPanel3.Controls.Add(this.statusLabel);
             this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.flowLayoutPanel3.Location = new System.Drawing.Point(0, 171);
+            this.flowLayoutPanel3.Location = new System.Drawing.Point(0, 197);
             this.flowLayoutPanel3.Margin = new System.Windows.Forms.Padding(0, 6, 0, 0);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
             this.flowLayoutPanel3.Size = new System.Drawing.Size(303, 13);
             this.flowLayoutPanel3.TabIndex = 9;
             // 
+            // lagLimitLayoutBox
+            // 
+            this.lagLimitLayoutBox.AutoSize = true;
+            this.lagLimitLayoutBox.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.lagLimitLayoutBox.Controls.Add(this.label5);
+            this.lagLimitLayoutBox.Controls.Add(this.lagLimitEntry);
+            this.lagLimitLayoutBox.Location = new System.Drawing.Point(0, 0);
+            this.lagLimitLayoutBox.Margin = new System.Windows.Forms.Padding(0);
+            this.lagLimitLayoutBox.Name = "lagLimitLayoutBox";
+            this.lagLimitLayoutBox.Size = new System.Drawing.Size(303, 26);
+            this.lagLimitLayoutBox.TabIndex = 10;
+            // 
+            // label5
+            // 
+            this.label5.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(3, 6);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(102, 13);
+            this.label5.TabIndex = 0;
+            this.label5.Text = "Lag limit in seconds:";
+            // 
+            // lagLimitEntry
+            // 
+            this.lagLimitEntry.Location = new System.Drawing.Point(111, 3);
+            this.lagLimitEntry.Name = "lagLimitEntry";
+            this.lagLimitEntry.Size = new System.Drawing.Size(189, 20);
+            this.lagLimitEntry.TabIndex = 1;
+            this.lagLimitEntry.TextChanged += new System.EventHandler(this.lagInSecondsTextbox_TextChanged);
+            this.lagLimitEntry.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.lagInSecondsTextbox_KeyPress);
+            // 
             // fLagSwitch
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(331, 209);
+            this.ClientSize = new System.Drawing.Size(331, 238);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "fLagSwitch";
@@ -310,6 +347,8 @@ namespace fLagSwitch
             this.lagInSecondsLayoutBox.PerformLayout();
             this.flowLayoutPanel3.ResumeLayout(false);
             this.flowLayoutPanel3.PerformLayout();
+            this.lagLimitLayoutBox.ResumeLayout(false);
+            this.lagLimitLayoutBox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -336,6 +375,9 @@ namespace fLagSwitch
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox lagInSecondsTextbox;
         private System.Windows.Forms.Button button_change;
+        private System.Windows.Forms.FlowLayoutPanel lagLimitLayoutBox;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox lagLimitEntry;
     }
 }
 

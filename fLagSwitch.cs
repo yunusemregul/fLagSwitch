@@ -14,7 +14,6 @@ namespace fLagSwitch
         private static Random random = new Random();
         private static bool isDebugging = false;
 
-
         private OpenFileDialog fileDialog;
 
         private String filePath;
@@ -30,6 +29,8 @@ namespace fLagSwitch
         private Timer keyPressTimer;
 
         private string randomRuleName;
+
+        private DateTime lagStartTime;
 
         [DllImport("User32.dll")]
         private static extern short GetAsyncKeyState(int vKey);
@@ -176,8 +177,7 @@ namespace fLagSwitch
                 return;
             }
 
-
-            if (keySpecified && (isDebugging || fileSpecified) && IsAdministrator())
+            if (keySpecified && (isDebugging || fileSpecified) && IsAdministrator() && (toggleLag.Checked || lagInSecondsTextbox.Text.Length > 0))
             {
                 {
                     statusLabel.ForeColor = Color.Green;
@@ -196,54 +196,56 @@ namespace fLagSwitch
 
         private void startLag()
         {
+            if (!isDebugging)
+            {
+                ProcessStartInfo blockIn = new ProcessStartInfo("cmd.exe");
+                ProcessStartInfo blockOut = new ProcessStartInfo("cmd.exe");
+                blockIn.WindowStyle = ProcessWindowStyle.Hidden;
+                blockOut.WindowStyle = ProcessWindowStyle.Hidden;
+
+                randomRuleName = randomString(10);
+
+                blockIn.Arguments = "/C netsh advfirewall firewall add rule name=\"" + randomRuleName + "\" dir=in action=block program=\"" + filePath + "\" enable=yes";
+                blockOut.Arguments = "/C netsh advfirewall firewall add rule name=\"" + randomRuleName + "\" dir=out action=block program=\"" + filePath + "\" enable=yes";
+
+                Process.Start(blockIn);
+                Process.Start(blockOut);
+            }
+
+            lagStartTime = DateTime.Now;
+            isLagging = true;
+
             if (enableSoundNotifications.Checked)
                 Console.Beep(420, 250);
 
             statusLabel.ForeColor = Color.Blue;
             statusLabel.Text = "Lagging!";
-            isLagging = true;
-
+            
             button1.Enabled = false;
             lagTogglerKeyEntry.Enabled = false;
             laggerEnabled.Enabled = false;
-
-            if (isDebugging)
-                return;
-
-            ProcessStartInfo blockIn = new ProcessStartInfo("cmd.exe");
-            ProcessStartInfo blockOut = new ProcessStartInfo("cmd.exe");
-            blockIn.WindowStyle = ProcessWindowStyle.Hidden;
-            blockOut.WindowStyle = ProcessWindowStyle.Hidden;
-
-            randomRuleName = randomString(10);
-
-            blockIn.Arguments = "/C netsh advfirewall firewall add rule name=\"" + randomRuleName + "\" dir=in action=block program=\"" + filePath + "\" enable=yes";
-            blockOut.Arguments = "/C netsh advfirewall firewall add rule name=\"" + randomRuleName + "\" dir=out action=block program=\"" + filePath + "\" enable=yes";
-
-            Process.Start(blockIn);
-            Process.Start(blockOut);
         }
 
         private void endLag()
         {
+            if (!isDebugging)
+            {
+                ProcessStartInfo ruleDeleter = new ProcessStartInfo("cmd.exe");
+                ruleDeleter.WindowStyle = ProcessWindowStyle.Hidden;
+                ruleDeleter.Arguments = "/C netsh advfirewall firewall delete rule name=\"" + randomRuleName + "\" program=\"" + filePath + "\"";
+
+                Process.Start(ruleDeleter);
+            }
+
             if (enableSoundNotifications.Checked)
                 Console.Beep(1250, 250);
-            
+
             laggerEnabled.Enabled = true;
             button1.Enabled = true;
             statusLabel.ForeColor = Color.Green;
             statusLabel.Text = "Ready!";
 
             isLagging = false;
-
-            if (isDebugging)
-                return;
-
-            ProcessStartInfo ruleDeleter = new ProcessStartInfo("cmd.exe");
-            ruleDeleter.WindowStyle = ProcessWindowStyle.Hidden;
-            ruleDeleter.Arguments = "/C netsh advfirewall firewall delete rule name=\"" + randomRuleName + "\" program=\"" + filePath + "\"";
-
-            Process.Start(ruleDeleter);
         }
 
         private async void keypressTimer_Tick(object sender, EventArgs e)
@@ -279,6 +281,19 @@ namespace fLagSwitch
                     {
                         isKeyPressing = false;
                     }
+
+                    if (isLagging && toggleLag.Checked)
+                    {
+                        if (lagLimitEntry.Text.Length > 0)
+                        {
+                            float lagSecondsLimit = float.Parse(lagLimitEntry.Text);
+
+                            if (DateTime.Now.Subtract(lagStartTime).TotalMilliseconds > lagSecondsLimit * 1000)
+                            {
+                                endLag();
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -291,17 +306,19 @@ namespace fLagSwitch
         private void toggleLag_CheckedChanged(object sender, EventArgs e)
         {
             lagInSecondsLayoutBox.Enabled = !toggleLag.Checked;
+            lagLimitLayoutBox.Enabled = toggleLag.Checked;
+            statusUpdater();
         }
 
         private void lagInSecondsTextbox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != '.'))
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != ','))
             {
                 e.Handled = true;
             }
 
             // only allow one decimal point
-            if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
+            if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf(',') > -1))
             {
                 e.Handled = true;
             }
@@ -311,6 +328,11 @@ namespace fLagSwitch
         {
             lagTogglerKeyEntry.Enabled = true;
             lagTogglerKeyEntry.Focus();
+        }
+
+        private void lagInSecondsTextbox_TextChanged(object sender, EventArgs e)
+        {
+            statusUpdater();
         }
     }
 }
