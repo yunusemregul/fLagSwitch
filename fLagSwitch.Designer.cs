@@ -286,11 +286,10 @@ namespace fLagSwitch
             this.flowLayoutPanel3.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.flowLayoutPanel3.Controls.Add(this.label3);
             this.flowLayoutPanel3.Controls.Add(this.statusLabel);
-            this.flowLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Top;
             this.flowLayoutPanel3.Location = new System.Drawing.Point(0, 197);
             this.flowLayoutPanel3.Margin = new System.Windows.Forms.Padding(0, 6, 0, 0);
             this.flowLayoutPanel3.Name = "flowLayoutPanel3";
-            this.flowLayoutPanel3.Size = new System.Drawing.Size(303, 13);
+            this.flowLayoutPanel3.Size = new System.Drawing.Size(76, 13);
             this.flowLayoutPanel3.TabIndex = 9;
             // 
             // lagLimitLayoutBox

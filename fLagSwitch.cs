@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Threading.Tasks;
@@ -156,6 +157,7 @@ namespace fLagSwitch
         {
             if (!IsAdministrator())
             {
+                // TODO: this looks stupid
                 statusLabel.ForeColor = Color.Red;
                 statusLabel.Text = "You have to run this as Administrator.";
                 button1.Enabled = false;
@@ -167,6 +169,7 @@ namespace fLagSwitch
                 ready = false;
                 toggleLag.Enabled = false;
                 button_change.Enabled = false;
+                lagLimitLayoutBox.Enabled = false;
                 return;
             }
 
@@ -265,7 +268,7 @@ namespace fLagSwitch
 
                             if (!toggleLag.Checked)
                             {
-                                float lagSeconds = float.Parse(lagInSecondsTextbox.Text);
+                                float lagSeconds = float.Parse(lagInSecondsTextbox.Text, new CultureInfo("en-US").NumberFormat);
                                 await Task.Delay((int)(lagSeconds * 1000) + random.Next(-500, 500));
                                 endLag();
                             }
@@ -286,7 +289,7 @@ namespace fLagSwitch
                     {
                         if (lagLimitEntry.Text.Length > 0)
                         {
-                            float lagSecondsLimit = float.Parse(lagLimitEntry.Text);
+                            float lagSecondsLimit = float.Parse(lagLimitEntry.Text, new CultureInfo("en-US").NumberFormat);
 
                             if (DateTime.Now.Subtract(lagStartTime).TotalMilliseconds > lagSecondsLimit * 1000)
                             {
@@ -312,13 +315,13 @@ namespace fLagSwitch
 
         private void lagInSecondsTextbox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != ','))
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) && (e.KeyChar != '.'))
             {
                 e.Handled = true;
             }
 
             // only allow one decimal point
-            if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf(',') > -1))
+            if ((e.KeyChar == '.') && ((sender as TextBox).Text.IndexOf('.') > -1))
             {
                 e.Handled = true;
             }
