@@ -20,6 +20,7 @@ namespace fLagSwitch
         private String filePath;
         private int key;
 
+        private bool legacyMode = false;
         private bool isKeyPressing = false;
         private bool fileSpecified = false;
         private bool keySpecified = false;
@@ -56,6 +57,16 @@ namespace fLagSwitch
 #if DEBUG
             isDebugging = true;
 #endif
+        }
+
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            base.OnFormClosing(e);
+
+            if (isLagging)
+            {
+                endLag();
+            }
         }
 
         public static bool IsAdministrator()
@@ -170,6 +181,7 @@ namespace fLagSwitch
                 toggleLag.Enabled = false;
                 button_change.Enabled = false;
                 lagLimitLayoutBox.Enabled = false;
+                legacyModeCheckbox.Enabled = false;
                 return;
             }
 
@@ -201,18 +213,30 @@ namespace fLagSwitch
         {
             if (!isDebugging)
             {
-                ProcessStartInfo blockIn = new ProcessStartInfo("cmd.exe");
-                ProcessStartInfo blockOut = new ProcessStartInfo("cmd.exe");
-                blockIn.WindowStyle = ProcessWindowStyle.Hidden;
-                blockOut.WindowStyle = ProcessWindowStyle.Hidden;
+                if (legacyMode)
+                {
+                    ProcessStartInfo block = new ProcessStartInfo("cmd.exe");
+                    block.WindowStyle = ProcessWindowStyle.Hidden;
 
-                randomRuleName = randomString(10);
+                    block.Arguments = "/C ipconfig /release";
 
-                blockIn.Arguments = "/C netsh advfirewall firewall add rule name=\"" + randomRuleName + "\" dir=in action=block program=\"" + filePath + "\" enable=yes";
-                blockOut.Arguments = "/C netsh advfirewall firewall add rule name=\"" + randomRuleName + "\" dir=out action=block program=\"" + filePath + "\" enable=yes";
+                    Process.Start(block);
+                }
+                else
+                {
+                    ProcessStartInfo blockIn = new ProcessStartInfo("cmd.exe");
+                    ProcessStartInfo blockOut = new ProcessStartInfo("cmd.exe");
+                    blockIn.WindowStyle = ProcessWindowStyle.Hidden;
+                    blockOut.WindowStyle = ProcessWindowStyle.Hidden;
 
-                Process.Start(blockIn);
-                Process.Start(blockOut);
+                    randomRuleName = randomString(10);
+
+                    blockIn.Arguments = "/C netsh advfirewall firewall add rule name=\"" + randomRuleName + "\" dir=in action=block program=\"" + filePath + "\" enable=yes";
+                    blockOut.Arguments = "/C netsh advfirewall firewall add rule name=\"" + randomRuleName + "\" dir=out action=block program=\"" + filePath + "\" enable=yes";
+
+                    Process.Start(blockIn);
+                    Process.Start(blockOut);
+                }
             }
 
             lagStartTime = DateTime.Now;
@@ -227,17 +251,37 @@ namespace fLagSwitch
             button1.Enabled = false;
             lagTogglerKeyEntry.Enabled = false;
             laggerEnabled.Enabled = false;
+            legacyModeCheckbox.Enabled = false;
+            toggleLag.Enabled = false;
+            lagLimitEntry.Enabled = false;
+            lagInSecondsTextbox.Enabled = false;
+            button_change.Enabled = false;
+            label5.Enabled = false;
+            label2.Enabled = false;
+            label1.Enabled = false;
         }
 
         private void endLag()
         {
             if (!isDebugging)
             {
-                ProcessStartInfo ruleDeleter = new ProcessStartInfo("cmd.exe");
-                ruleDeleter.WindowStyle = ProcessWindowStyle.Hidden;
-                ruleDeleter.Arguments = "/C netsh advfirewall firewall delete rule name=\"" + randomRuleName + "\" program=\"" + filePath + "\"";
+                if (legacyMode)
+                {
+                    ProcessStartInfo unBlock = new ProcessStartInfo("cmd.exe");
+                    unBlock.WindowStyle = ProcessWindowStyle.Hidden;
 
-                Process.Start(ruleDeleter);
+                    unBlock.Arguments = "/C ipconfig /renew";
+
+                    Process.Start(unBlock);
+                }
+                else
+                {
+                    ProcessStartInfo ruleDeleter = new ProcessStartInfo("cmd.exe");
+                    ruleDeleter.WindowStyle = ProcessWindowStyle.Hidden;
+                    ruleDeleter.Arguments = "/C netsh advfirewall firewall delete rule name=\"" + randomRuleName + "\" program=\"" + filePath + "\"";
+
+                    Process.Start(ruleDeleter);
+                }
             }
 
             if (enableSoundNotifications.Checked)
@@ -245,6 +289,14 @@ namespace fLagSwitch
 
             laggerEnabled.Enabled = true;
             button1.Enabled = true;
+            legacyModeCheckbox.Enabled = true;
+            toggleLag.Enabled = true;
+            lagLimitEntry.Enabled = true;
+            lagInSecondsTextbox.Enabled = true;
+            button_change.Enabled = true;
+            label5.Enabled = true;
+            label2.Enabled = true;
+            label1.Enabled = true;
             statusLabel.ForeColor = Color.Green;
             statusLabel.Text = "Ready!";
 
@@ -335,6 +387,14 @@ namespace fLagSwitch
 
         private void lagInSecondsTextbox_TextChanged(object sender, EventArgs e)
         {
+            statusUpdater();
+        }
+
+        private void legacyModeCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            legacyMode = legacyModeCheckbox.Checked;
+            button1.Enabled = !legacyMode;
+            label1.Enabled = !legacyMode;
             statusUpdater();
         }
     }
