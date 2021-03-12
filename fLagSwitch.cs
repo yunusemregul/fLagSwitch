@@ -192,7 +192,7 @@ namespace fLagSwitch
                 return;
             }
 
-            if (keySpecified && (isDebugging || fileSpecified) && IsAdministrator() && (toggleLag.Checked || lagInSecondsTextbox.Text.Length > 0))
+            if (keySpecified && (isDebugging || (legacyMode || fileSpecified)) && IsAdministrator() && (toggleLag.Checked || lagInSecondsTextbox.Text.Length > 0))
             {
                 {
                     statusLabel.ForeColor = Color.Green;
@@ -305,7 +305,7 @@ namespace fLagSwitch
 
         private async void keypressTimer_Tick(object sender, EventArgs e)
         {
-            if (isDebugging || (keySpecified && fileSpecified && laggerEnabled.Checked))
+            if (isDebugging || (keySpecified && (legacyMode || fileSpecified) && laggerEnabled.Checked))
             {
                 if (ready)
                 {
